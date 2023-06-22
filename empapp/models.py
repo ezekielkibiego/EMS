@@ -34,10 +34,25 @@ class Department(models.Model):
         return self.name
 
 class Employee(models.Model):
-    image = CloudinaryField("image",null=True)
+    MARITAL_STATUS_CHOICES = [
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('divorced', 'Divorced'),
+        ('widowed', 'Widowed'),
+        ('other', 'Other'),
+        ('not_specified', 'Prefer Not to Say'),
+    ]
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+        ('not_specified', 'Prefer Not to Say'),
+    ]
+    image = CloudinaryField("image", blank=True ,null=True)
     first_name = models.CharField(primary_key='true',max_length=50,unique='true')
     middle_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50)
+    gender = models.CharField(max_length=15, null=True,choices=GENDER_CHOICES)
     education = models.ManyToManyField(Education)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     depart = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
@@ -47,13 +62,18 @@ class Employee(models.Model):
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
     email = models.EmailField()
     phone = models.CharField(max_length=50)
+    marital_status = models.CharField(max_length=20, null=True, choices=MARITAL_STATUS_CHOICES)
     address = models.CharField(max_length=100, null=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(blank=True, null=True)
     
-    def save_employee(self):
-        self.save()
-    
+    def save(self, *args, **kwargs):
+        # Check if the user is an admin before saving
+        if self.user.is_admin:
+            super().save(*args, **kwargs)
+        else:
+            raise PermissionError("Only admins can edit the salary field.")
+
     def create_employee(self):
         self.save()
 
