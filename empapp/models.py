@@ -166,6 +166,14 @@ class Profile(models.Model):
     profile_photo = CloudinaryField("image",null=True)
     about = models.TextField(max_length=300)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE,null=True)
+    birthdate = models.DateField(null=True)
+    nationality = models.CharField(max_length=100,null=True)
+    emergency_contact_name = models.CharField(max_length=100, null=True)
+    emergency_contact_relationship = models.CharField(max_length=100,null=True)
+    emergency_contact_phone = models.CharField(max_length=20,null=True)
+    emergency_contact_email = models.EmailField(null=True)
+    interests = models.CharField(max_length=255, blank=True)
+
     updated_on = models.DateTimeField(auto_now=True,null=True)
 
     def __str__(self):
