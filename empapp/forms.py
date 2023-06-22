@@ -1,6 +1,6 @@
 from django import forms
-from .models import Employee
-from .models import Company
+from .models import *
+from django.forms import ModelForm
 
 # This is for employee
 class EmployeeForm(forms.ModelForm):
@@ -20,3 +20,12 @@ class EditEmployeeForm(forms.ModelForm):
         fields = "__all__"
 
 
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ['user']
+
+class UpdateProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ['user']

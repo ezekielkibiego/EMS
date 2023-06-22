@@ -1,8 +1,10 @@
 
 from django.http import HttpResponseRedirect
 from .models import *
-from django.shortcuts import render,redirect
-from .forms import CompanyForm,EmployeeForm,EditEmployeeForm
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
+
+from .forms import *
 
 
 # To retrieve Company details
@@ -75,4 +77,39 @@ def updateEmp(request, first_name):
             employee.save()
         return redirect("/employees")
     return render(request, "editemployee.html", {'form': form})
+
+
+@login_required(login_url="/accounts/login/")
+def profile(request):
+    current_user = request.user
+    profile = Profile.objects.filter(user_id=current_user.id).first()
+    
+    employee = Employee.objects.filter(user_id=current_user.id)
+    documents = Document.objects.filter(user_id=current_user.id)
+    training = Training.objects.filter(user_id=current_user.id)
+    payroll = Payroll.objects.filter(user_id=current_user.id)
+    leave = Leave.objects.filter(user_id=current_user.id)
+    attendance = Attendance.objects.filter(user_id=current_user.id)
+    education = Education.objects.filter(user_id=current_user.id)
+    depart = Department.objects.filter(user_id=current_user.id)
+    return render(request, "profile.html", {"profile": profile, ' employee':  employee,
+                                             'documents': documents,"payroll": payroll, "training": training,
+                                             "leave": leave, "attendance": attendance, "education": education,
+                                             'depart': depart})
+
+
+@login_required(login_url='/accounts/login/')
+def update_profile(request,id):
+    user = User.objects.get(id=id)
+    profile = Profile.objects.get(user_id = user)
+    form = UpdateProfileForm(instance=profile)
+    if request.method == "POST":
+            form = UpdateProfileForm(request.POST,request.FILES,instance=profile)
+            if form.is_valid():  
+                
+                profile = form.save(commit=False)
+                profile.save()
+                return redirect('profile') 
+            
+    return render(request, 'update_profile.html', {"form":form})
 

@@ -12,6 +12,8 @@ admin.site.register(Leave)
 admin.site.register(Document)
 admin.site.register(Payroll)
 admin.site.register(Training)
+admin.site.register(Profile)
+
 
 
 

@@ -1,5 +1,11 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
+from django.contrib.auth.models import User
+from django.db.models.fields import NullBooleanField, TextField
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
+
 # Create your models here.
 
 class Company(models.Model):
@@ -12,9 +18,11 @@ class Company(models.Model):
         return self.coName
 
 class Education(models.Model):
-    degree = models.CharField(max_length=100)
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)
     institution = models.CharField(max_length=100)
-    completion_year = models.IntegerField()
+    degree = models.CharField(max_length=100)
+    field_of_study = models.CharField(max_length=100, blank=True)
+    completion_year = models.IntegerField(blank=True)
 
     def __str__(self):
         return f"{self.degree} from {self.institution}, {self.completion_year}"
@@ -22,6 +30,9 @@ class Education(models.Model):
 class Role(models.Model):
     name = models.CharField(max_length=50, null=False)
     level = models.CharField(max_length=50, blank=True)
+    manager = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
+    salary = models.IntegerField(default=0)
+    bonus = models.IntegerField(default=0)
     def __str__(self):
         return self.name
 
@@ -53,13 +64,8 @@ class Employee(models.Model):
     middle_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50)
     gender = models.CharField(max_length=15, null=True,choices=GENDER_CHOICES)
-    education = models.ManyToManyField(Education)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    depart = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
-    manager = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
-    salary = models.IntegerField(default=0)
-    bonus = models.IntegerField(default=0)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
+    # company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    
     email = models.EmailField()
     phone = models.CharField(max_length=50)
     marital_status = models.CharField(max_length=20, null=True, choices=MARITAL_STATUS_CHOICES)
@@ -67,13 +73,9 @@ class Employee(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(blank=True, null=True)
     
-    def save(self, *args, **kwargs):
-        # Check if the user is an admin before saving
-        if self.user.is_admin:
-            super().save(*args, **kwargs)
-        else:
-            raise PermissionError("Only admins can edit the salary field.")
-
+    def save_employee(self):
+        self.save()
+    
     def create_employee(self):
         self.save()
 
@@ -110,14 +112,14 @@ class Leave(models.Model):
     def __str__(self):
         return f"{self.employee.first_name} - {self.start_date} to {self.end_date}"
 
-# class Performance(models.Model):
-#     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-#     year = models.PositiveIntegerField()
-#     rating = models.DecimalField(max_digits=3, decimal_places=2)
-#     feedback = models.TextField()
+class Performance(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    year = models.PositiveIntegerField()
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    feedback = models.TextField()
 
-#     def __str__(self):
-#         return f"{self.employee.name} - {self.year}"
+    def __str__(self):
+        return f"{self.employee.name} - {self.year}"
 
 class Payroll(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -150,3 +152,22 @@ class Document(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile',null=True)
+    profile_photo = CloudinaryField("image",null=True)
+    about = models.TextField(max_length=300)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE,null=True)
+    updated_on = models.DateTimeField(auto_now=True,null=True)
+
+    def __str__(self):
+        return f'{self.user.username} profile'
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
