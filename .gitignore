@@ -1,6 +1,7 @@
 virtual/
 venv/
 virtual/
+documents/
 .env
 env/
 !project/
