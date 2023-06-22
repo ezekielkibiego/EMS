@@ -18,6 +18,7 @@ class Company(models.Model):
         return self.coName
 
 class Education(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='education',null=True)
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)
     institution = models.CharField(max_length=100)
     degree = models.CharField(max_length=100)
@@ -28,15 +29,17 @@ class Education(models.Model):
         return f"{self.degree} from {self.institution}, {self.completion_year}"
 
 class Role(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='role',null=True)
     name = models.CharField(max_length=50, null=False)
     level = models.CharField(max_length=50, blank=True)
     manager = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
     salary = models.IntegerField(default=0)
-    bonus = models.IntegerField(default=0)
+    bonus = models.IntegerField(default=0, blank=True)
     def __str__(self):
         return self.name
 
 class Department(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='depart',null=True)
     name = models.CharField(max_length=50, null=False)
     location = models.CharField(max_length=180)
     description = models.TextField()
@@ -59,13 +62,12 @@ class Employee(models.Model):
         ('other', 'Other'),
         ('not_specified', 'Prefer Not to Say'),
     ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee',null=True)
     image = CloudinaryField("image", blank=True ,null=True)
     first_name = models.CharField(primary_key='true',max_length=50,unique='true')
     middle_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50)
     gender = models.CharField(max_length=15, null=True,choices=GENDER_CHOICES)
-    # company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    
     email = models.EmailField()
     phone = models.CharField(max_length=50)
     marital_status = models.CharField(max_length=20, null=True, choices=MARITAL_STATUS_CHOICES)
@@ -94,6 +96,7 @@ class Employee(models.Model):
         return f"{self.first_name} {self.last_name}"
     
 class Attendance(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='attendance',null=True)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     check_in_time = models.DateTimeField()
     check_out_time = models.DateTimeField()
@@ -103,6 +106,7 @@ class Attendance(models.Model):
         return f"{self.employee.first_name} - {self.date}"
 
 class Leave(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='leave',null=True)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -113,6 +117,7 @@ class Leave(models.Model):
         return f"{self.employee.first_name} - {self.start_date} to {self.end_date}"
 
 class Performance(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfomance',null=True)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     year = models.PositiveIntegerField()
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
@@ -122,17 +127,19 @@ class Performance(models.Model):
         return f"{self.employee.name} - {self.year}"
 
 class Payroll(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='payroll',null=True)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     month = models.PositiveIntegerField()
     year = models.PositiveIntegerField()
     salary = models.DecimalField(max_digits=10, decimal_places=2)
-    deductions = models.DecimalField(max_digits=10, decimal_places=2)
-    net_pay = models.DecimalField(max_digits=10, decimal_places=2)
+    deductions = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
+    net_pay = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
 
     def __str__(self):
         return f"{self.employee.first_name} - {self.month}/{self.year}"
 
 class Training(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='training',null=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
     date = models.DateField()
@@ -144,6 +151,7 @@ class Training(models.Model):
         return self.title
 
 class Document(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='document',null=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
     file = models.FileField(upload_to='documents/')
