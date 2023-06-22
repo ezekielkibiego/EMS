@@ -78,7 +78,7 @@ class Attendance(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f"{self.employee.name} - {self.date}"
+        return f"{self.employee.first_name} - {self.date}"
 
 class Leave(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -88,7 +88,7 @@ class Leave(models.Model):
     status = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"{self.employee.name} - {self.start_date} to {self.end_date}"
+        return f"{self.employee.first_name} - {self.start_date} to {self.end_date}"
 
 # class Performance(models.Model):
 #     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -108,7 +108,7 @@ class Payroll(models.Model):
     net_pay = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.employee.name} - {self.month}/{self.year}"
+        return f"{self.employee.first_name} - {self.month}/{self.year}"
 
 class Training(models.Model):
     title = models.CharField(max_length=100)
