@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+
+{% block content %} 
+<div class="container text-white">
+    <div>
+        <h2 class="mt-5 text-center">List of Companies</h2>
+    </div>
+    <table class="table">
+      <thead class="bg-primary text-white">
+        <tr>
+          <th>Company Name</th>
+          <th>Email</th>
+          <th>Logo</th>
+          <th>Address</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for company in companies %}
+        <tr>
+          <td>{{company.coName}}</td>
+          <td>{{company.coEmail}}</td>
+          <td><img src="{{company.coLogo.url}}" alt="Company Logo" width="50"></td>
+          <td>{{company.coAddress}}</td>
+          <td>
+         
+            <button class="btn-danger btn-sm" onclick="location.href='/delete/{{company.coName}}'">Delete</button>
+            <button class="btn-success btn-sm" onclick="location.href='/update/{{company.coName}}'">Update</button>
+            <button class="btn-primary btn-sm" onclick="location.href='/emp'">Add Employee</button>
+
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+{%endblock%}
+
+

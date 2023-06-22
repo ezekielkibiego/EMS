@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static%}
+{% load bootstrap4 %}
+{% block content %} 
+<center><div><h2 class="bg-primary text-white">List of Employees</h2></div></center>
+    <table class="table">
+      <thead class="bg-danger text-white">
+        <tr>
+          <th>Photo</th>
+          <th>FirstName</th>
+          <th>LastName</th>
+          <th>Company</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for employee in employees %}
+        <tr>
+          <td><img src="{{employee.image.url}}" width="50" style="border-radius: 50%;" alt="Employee Photo"></td>
+          <td>{{employee.first_name}}</td>
+          <td>{{employee.last_name}}</td>
+          <td>{{employee.company}}</td>
+          <td>{{employee.email}}</td>
+          <td>{{employee.phone}}</td>
+          <td>
+            
+            <button class="btn-danger btn-sm" onclick="location.href='/deleteEmp/{{employee.first_name}}'">Delete</button>
+            <button class="btn-success btn-sm" onclick="location.href='/updateEmp/{{employee.first_name}}'">Update</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+{%endblock%}
+    
+ 
