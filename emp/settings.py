@@ -45,9 +45,9 @@ INSTALLED_APPS = [
     'cloudinary',
     'bootstrap4',
     'empapp',
-    'crispy_forms',
+    
     'rest_framework',
-    'rest_framework_jwt',
+   
 
 ]
 
