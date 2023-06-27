@@ -3,113 +3,160 @@ from django.http import HttpResponseRedirect
 from .models import *
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
-
+from rest_framework import generics
 from .forms import *
+from rest_framework import permissions
+from rest_framework import views
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from empapp.serializers import *
+from django.contrib.auth import authenticate, login
+from rest_framework import status
+from rest_framework_jwt.settings import api_settings
+from rest_framework.decorators import api_view, permission_classes
 
+
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({'message': 'User registered successfully.'})
+        return Response(serializer.errors, status=400)
+    
+# @api_view(['POST'])
+# def registration(request):
+#     serializer = UserSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         user = serializer.instance
+#         payload = api_settings.JWT_PAYLOAD_HANDLER(user)
+#         token = api_settings.JWT_ENCODE_HANDLER(payload)
+#         return Response({'token': token}, status=status.HTTP_201_CREATED)
+#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return Response({'message': 'User logged in successfully.'})
+        return Response({'message': 'Invalid credentials.'}, status=401)
 
 # To retrieve Company details
 def index(request):
-    companies = Company.objects.all()
-    return render(request, "index.html", {'companies':companies})
+    return render(request, "index.html")
 
-def edit(request, coName):
-    company = Company.objects.get(coName=coName)
-    return render(request, "edit.html", {'company':company})
+@api_view(['GET'])
+def get_companies(request):
+    if request.method == 'GET':
+        companies = Company.objects.all()
+        serializer = CompanySerializer(companies, many=True)
+        return Response(serializer.data)
 
-# To Update Company
-def update(request, coName):
-    company = Company.objects.get(coName=coName)
-    form = CompanyForm(instance=company)
-    if request.method == "POST":
-        form = CompanyForm(request.POST,request.FILES, instance=company)
-        if form.is_valid():
-            company =  form.save(commit=False)
-            company.save()
-        return redirect("/")
-    return render(request, "edit.html", {'form':form})
+@api_view(['GET'])
+def get_educations(request):
+    if request.method == 'GET':
+        educations = Education.objects.all()
+        serializer = EducationSerializer(educations, many=True)
+        return Response(serializer.data)
 
-# To Delete Company details
-def delete(request, coName):
-    company = Company.objects.get(coName=coName)
-    company.delete()
-    return redirect("/")
+@api_view(['GET'])
+def get_roles(request):
+    if request.method == 'GET':
+        roles = Role.objects.all()
+        serializer = RoleSerializer(roles, many=True)
+        return Response(serializer.data)
 
+@api_view(['GET'])
+def get_departments(request):
+    if request.method == 'GET':
+        departments = Department.objects.all()
+        serializer = DepartmentSerializer(departments, many=True)
+        return Response(serializer.data)
 
-# To show employee details
+@api_view(['GET', 'POST'])
 def employees(request):
-    employees = Employee.objects.all()
-    return render(request, "employees.html", {'employees':employees})
+    if request.method == 'GET':
+        employees = Employee.objects.all()
+        serializer = EmployeeSerializer(employees, many=True)
+        return Response(serializer.data)
 
-def emp(request):
-    if request.method == 'POST':
-        form = EmployeeForm(request.POST, request.FILES)
-        if form.is_valid():
-            employee = form.save(commit=False)
-            
-            employee.save()
-        return HttpResponseRedirect('/employees')
-    else:
-        form = EmployeeForm()
+    elif request.method == 'POST':
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    return render(request, "addemp.html", {'form':form})
+@api_view(['PUT', 'DELETE'])
+def employee_detail(request, first_name):
+    try:
+        employee = Employee.objects.get(first_name=first_name)
+    except Employee.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
+    if request.method == 'PUT':
+        serializer = EmployeeSerializer(employee, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    elif request.method == 'DELETE':
+        employee.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-# To delete employee details
-def deleteEmp(request, first_name):
-    employee = Employee.objects.get(first_name=first_name)
-    employee.delete()
-    return redirect("/employees")
+@api_view(['GET'])
+def get_attendances(request):
+    if request.method == 'GET':
+        attendances = Attendance.objects.all()
+        serializer = AttendanceSerializer(attendances, many=True)
+        return Response(serializer.data)
 
-# To edit employee details
-def editemp(request, first_name):
-    employee = Employee.objects.get(first_name=first_name)
-    return render(request, "editemployee.html", {'employee':employee})
+@api_view(['GET'])
+def get_leaves(request):
+    if request.method == 'GET':
+        leaves = Leave.objects.all()
+        serializer = LeaveSerializer(leaves, many=True)
+        return Response(serializer.data)
 
-# To update employee details
-def updateEmp(request, first_name):
-    employee = Employee.objects.get(first_name=first_name)
-    form = EditEmployeeForm(instance= employee)
-    if request.method == "POST":
-        form = EditEmployeeForm(request.POST,request.FILES, instance=employee)
-        if form.is_valid():
-            employee =  form.save(commit=False)
-            employee.save()
-        return redirect("/employees")
-    return render(request, "editemployee.html", {'form': form})
+@api_view(['GET'])
+def get_performances(request):
+    if request.method == 'GET':
+        performances = Performance.objects.all()
+        serializer = PerformanceSerializer(performances, many=True)
+        return Response(serializer.data)
 
+@api_view(['GET'])
+def get_payrolls(request):
+    if request.method == 'GET':
+        payrolls = Payroll.objects.all()
+        serializer = PayrollSerializer(payrolls, many=True)
+        return Response(serializer.data)
 
-@login_required(login_url="/accounts/login/")
-def profile(request):
-    current_user = request.user
-    profile = Profile.objects.filter(user_id=current_user.id).first()
-    
-    employee = Employee.objects.filter(user_id=current_user.id)
-    documents = Document.objects.filter(user_id=current_user.id)
-    training = Training.objects.filter(user_id=current_user.id)
-    payroll = Payroll.objects.filter(user_id=current_user.id)
-    leave = Leave.objects.filter(user_id=current_user.id)
-    attendance = Attendance.objects.filter(user_id=current_user.id)
-    education = Education.objects.filter(user_id=current_user.id)
-    depart = Department.objects.filter(user_id=current_user.id)
-    return render(request, "profile.html", {"profile": profile, ' employee':  employee,
-                                             'documents': documents,"payroll": payroll, "training": training,
-                                             "leave": leave, "attendance": attendance, "education": education,
-                                             'depart': depart})
+@api_view(['GET'])
+def get_trainings(request):
+    if request.method == 'GET':
+        trainings = Training.objects.all()
+        serializer = TrainingSerializer(trainings, many=True)
+        return Response(serializer.data)
 
+@api_view(['GET'])
+def get_documents(request):
+    if request.method == 'GET':
+        documents = Document.objects.all()
+        serializer = DocumentSerializer(documents, many=True)
+        return Response(serializer.data)
 
-@login_required(login_url='/accounts/login/')
-def update_profile(request,id):
-    user = User.objects.get(id=id)
-    profile = Profile.objects.get(user_id = user)
-    form = UpdateProfileForm(instance=profile)
-    if request.method == "POST":
-            form = UpdateProfileForm(request.POST,request.FILES,instance=profile)
-            if form.is_valid():  
-                
-                profile = form.save(commit=False)
-                profile.save()
-                return redirect('profile') 
-            
-    return render(request, 'update_profile.html', {"form":form})
-
+@api_view(['GET'])
+def get_profiles(request):
+    if request.method == 'GET':
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
+        return Response(serializer.data)
