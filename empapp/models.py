@@ -159,7 +159,7 @@ class Document(models.Model):
         return self.title
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', null=True)  # One-to-one relationship with User model for profile
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # One-to-one relationship with User model for profile
     profile_photo = CloudinaryField("image", null=True)  # Cloudinary image field for profile photo (optional)
     about = models.TextField(max_length=300)  # About field for profile
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)  # Foreign key relationship with Employee model

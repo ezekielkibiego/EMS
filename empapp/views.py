@@ -13,7 +13,6 @@ from rest_framework.response import Response
 from empapp.serializers import *
 from django.contrib.auth import authenticate, login
 from rest_framework import status
-from rest_framework_jwt.settings import api_settings
 from rest_framework.decorators import api_view, permission_classes
 from django.http import JsonResponse
 
@@ -25,17 +24,6 @@ class RegisterView(APIView):
             user = serializer.save()
             return Response({'message': 'User registered successfully.'})
         return Response(serializer.errors, status=400)
-    
-# @api_view(['POST'])
-# def registration(request):
-#     serializer = UserSerializer(data=request.data)
-#     if serializer.is_valid():
-#         serializer.save()
-#         user = serializer.instance
-#         payload = api_settings.JWT_PAYLOAD_HANDLER(user)
-#         token = api_settings.JWT_ENCODE_HANDLER(payload)
-#         return Response({'token': token}, status=status.HTTP_201_CREATED)
-#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
