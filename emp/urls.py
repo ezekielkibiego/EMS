@@ -20,7 +20,6 @@ from django_registration.backends.one_step.views import RegistrationView
 
 # from rest_framework.authtoken import views
 from django.contrib.auth import views
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 
 urlpatterns = [
@@ -32,4 +31,3 @@ urlpatterns = [
     path('logout/', views.logout_then_login, name='logout'),
 
 ]
-urlpatterns += staticfiles_urlpatterns()
