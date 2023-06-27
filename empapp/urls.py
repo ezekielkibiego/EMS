@@ -11,5 +11,8 @@ urlpatterns = [
     path('api/login/', LoginView.as_view(), name='login'),
     path('api/employees/', views.employees, name='employees_list'),
     path('api/employees/<str:first_name>/', views.employee_detail, name='employee_detail'),
+    path('api/profiles/', views.profiles, name='profile'),
+    path('api/profiles/<str:username>/', views.user_profile, name='user_profile'),
+    path('api/profiles/<str:username>/update/', views.update_user_profile, name='update_user_profile'),
 
 ]

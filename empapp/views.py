@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login
 from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 from rest_framework.decorators import api_view, permission_classes
+from django.http import JsonResponse
 
 
 class RegisterView(APIView):
@@ -155,8 +156,33 @@ def get_documents(request):
         return Response(serializer.data)
 
 @api_view(['GET'])
-def get_profiles(request):
+def profiles(request):
     if request.method == 'GET':
         profiles = Profile.objects.all()
         serializer = ProfileSerializer(profiles, many=True)
         return Response(serializer.data)
+    
+@api_view(['GET'])
+def user_profile(request, username):
+    try:
+        profile = Profile.objects.get(user__username=username)
+    except Profile.DoesNotExist:
+        return Response({'message': 'User profile not found.'}, status=404)
+
+    if request.method == 'GET':
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+
+@api_view(['PUT'])
+def update_user_profile(request, username):
+    try:
+        profile = Profile.objects.get(user__username=username)
+    except Profile.DoesNotExist:
+        return Response({'message': 'User profile not found.'}, status=404)
+
+    if request.method == 'PUT':
+        serializer = ProfileSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
