@@ -102,42 +102,42 @@ def employee_detail(request, first_name):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-def get_attendances(request):
+def attendances(request):
     if request.method == 'GET':
         attendances = Attendance.objects.all()
         serializer = AttendanceSerializer(attendances, many=True)
         return Response(serializer.data)
 
 @api_view(['GET'])
-def get_leaves(request):
+def leaves(request):
     if request.method == 'GET':
         leaves = Leave.objects.all()
         serializer = LeaveSerializer(leaves, many=True)
         return Response(serializer.data)
 
 @api_view(['GET'])
-def get_performances(request):
+def performances(request):
     if request.method == 'GET':
         performances = Performance.objects.all()
         serializer = PerformanceSerializer(performances, many=True)
         return Response(serializer.data)
 
 @api_view(['GET'])
-def get_payrolls(request):
+def payrolls(request):
     if request.method == 'GET':
         payrolls = Payroll.objects.all()
         serializer = PayrollSerializer(payrolls, many=True)
         return Response(serializer.data)
 
 @api_view(['GET'])
-def get_trainings(request):
+def trainings(request):
     if request.method == 'GET':
         trainings = Training.objects.all()
         serializer = TrainingSerializer(trainings, many=True)
         return Response(serializer.data)
 
 @api_view(['GET'])
-def get_documents(request):
+def documents(request):
     if request.method == 'GET':
         documents = Document.objects.all()
         serializer = DocumentSerializer(documents, many=True)
