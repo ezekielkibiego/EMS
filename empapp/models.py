@@ -64,8 +64,9 @@ class Employee(models.Model):
         ('not_specified', 'Prefer Not to Say'),
     ]
     image = CloudinaryField("image", blank=True, null=True)  # Cloudinary image field for employee image (optional)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee', null=True)
 
-    first_name = models.CharField(primary_key=True, max_length=50)  # Primary key for the employee
+    first_name = models.CharField( max_length=50, null=True)  # Primary key for the employee
     middle_name = models.CharField(max_length=50, blank=True)  # Middle name field for employee (optional)
     last_name = models.CharField(max_length=50)  # Last name field for employee
     gender = models.CharField(max_length=15, null=True, choices=GENDER_CHOICES)  # Gender field for employee
