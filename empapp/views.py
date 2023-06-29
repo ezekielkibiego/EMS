@@ -35,7 +35,8 @@ class LoginView(APIView):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return Response({'message': 'User logged in successfully.'})
+            return Response({'message': 'User logged in successfully.',
+                             "user": UserSerializer(user).data})
         return Response({'message': 'Invalid credentials.'}, status=401)
 
 # To retrieve Company details
