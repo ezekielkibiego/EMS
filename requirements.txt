@@ -1,5 +1,5 @@
 anyio==3.6.2
-asgiref==3.5.2
+asgiref==3.7.2
 beautifulsoup4==4.12.2
 cachetools==5.2.0
 certifi==2021.10.8
@@ -11,7 +11,7 @@ cryptography==37.0.4
 cssselect==1.2.0
 cssutils==2.6.0
 dj-database-url==2.0.0
-Django==4.1.5
+Django==4.2.2
 django-appconf==1.0.5
 django-bootstrap4==23.1
 django-cors-headers==3.13.0
@@ -23,6 +23,7 @@ django-simple-mail==2.3.5
 django-tinymce==3.4.0
 django-utils-six==2.0
 djangorestframework==3.14.0
+djangorestframework-jwt==1.11.0
 djangorestframework-pagination==1.1
 djangorestframework-simplejwt==5.2.2
 dnspython==2.2.1
@@ -41,7 +42,7 @@ psycopg2-binary==2.9.5
 pycodestyle==2.7.0
 pycparser==2.21
 pydantic==1.10.2
-PyJWT==2.7.0
+PyJWT==1.7.1
 python-dateutil==2.8.2
 python-decouple==3.5
 pytz==2022.6
