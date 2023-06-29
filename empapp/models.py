@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.fields import NullBooleanField, TextField
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-
+from django.utils.text import slugify
 # from django.contrib.auth.models import AbstractUser
 
 # class User(AbstractUser):
@@ -64,8 +64,7 @@ class Employee(models.Model):
         ('not_specified', 'Prefer Not to Say'),
     ]
     image = CloudinaryField("image", blank=True, null=True)  # Cloudinary image field for employee image (optional)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee', null=True)
-
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)    
     first_name = models.CharField( max_length=50, null=True)  # Primary key for the employee
     middle_name = models.CharField(max_length=50, blank=True)  # Middle name field for employee (optional)
     last_name = models.CharField(max_length=50)  # Last name field for employee
@@ -81,6 +80,14 @@ class Employee(models.Model):
 
     def save_employee(self):
         self.save()
+
+    def save(self, *args, **kwargs):
+        # Generate a slug from the employee's full name when saving the model
+        if not self.slug:
+            full_name = f"{self.first_name} {self.last_name}"
+            self.slug = slugify(full_name)
+
+        super().save(*args, **kwargs)
 
     def create_employee(self):
         self.save()
