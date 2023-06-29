@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from django.http import JsonResponse
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
 class RegisterView(APIView):
@@ -25,7 +26,7 @@ class RegisterView(APIView):
             return Response({'message': 'User registered successfully.'})
         return Response(serializer.errors, status=400)
 
-
+@permission_classes([AllowAny, ])
 class LoginView(APIView):
     def post(self, request):
         username = request.data.get('username')
