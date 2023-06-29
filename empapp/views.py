@@ -86,16 +86,17 @@ def employees(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT', 'DELETE'])
-def employee_detail(request, first_name):
+def employee_detail(request, username):
     try:
-        employee = Employee.objects.get(first_name=first_name)
+        profile = Profile.objects.get(user__username=username)
+        employee = profile.employee
     except Employee.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
         serializer = EmployeeSerializer(employee, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
