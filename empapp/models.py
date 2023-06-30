@@ -6,6 +6,7 @@ from django.db.models.fields import NullBooleanField, TextField
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.utils.text import slugify
+import uuid
 # from django.contrib.auth.models import AbstractUser
 
 # class User(AbstractUser):
@@ -20,15 +21,7 @@ class Company(models.Model):
     def __str__(self):
         return self.coName
 
-class Education(models.Model):
-    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)  # Foreign key relationship with Employee model
-    institution = models.CharField(max_length=100)  # Institution field for education
-    degree = models.CharField(max_length=100)  # Degree field for education
-    field_of_study = models.CharField(max_length=100, blank=True)  # Field of study for education (optional)
-    completion_year = models.IntegerField(blank=True)  # Completion year for education (optional)
 
-    def __str__(self):
-        return f"{self.degree} from {self.institution}, {self.completion_year}"
 
 class Role(models.Model):
     name = models.CharField(max_length=50, null=False)  # Name field for role
@@ -40,13 +33,7 @@ class Role(models.Model):
     def __str__(self):
         return self.name
 
-class Department(models.Model):
-    name = models.CharField(max_length=50, null=False)  # Name field for department
-    location = models.CharField(max_length=180)  # Location field for department
-    description = models.TextField()  # Description field for department
 
-    def __str__(self):
-        return self.name
 
 class Employee(models.Model):
     MARITAL_STATUS_CHOICES = [
@@ -107,6 +94,25 @@ class Employee(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+class Department(models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)  # Foreign key relationship with Employee model
+    name = models.CharField(max_length=50, null=False)  # Name field for department
+    location = models.CharField(max_length=180)  # Location field for department
+    description = models.TextField()  # Description field for department
+
+    def __str__(self):
+        return self.name
+
+class Education(models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)  # Foreign key relationship with Employee model
+    institution = models.CharField(max_length=100)  # Institution field for education
+    degree = models.CharField(max_length=100)  # Degree field for education
+    field_of_study = models.CharField(max_length=100, blank=True)  # Field of study for education (optional)
+    completion_year = models.IntegerField(blank=True)  # Completion year for education (optional)
+
+    def __str__(self):
+        return f"{self.degree} from {self.institution}, {self.completion_year}"
+
 class Attendance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Foreign key relationship with Employee model
     check_in_time = models.DateTimeField()  # Check-in time field for attendance
@@ -152,17 +158,18 @@ class Training(models.Model):
     date = models.DateField()  # Date field for training
     location = models.CharField(max_length=100)  # Location field for training
     duration = models.PositiveIntegerField()  # Duration field for training
-    employees = models.ManyToManyField(Employee)  # Many-to-many relationship with Employee model for employees attending the training
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)  # Foreign key relationship with Employee model
 
     def __str__(self):
-        return self.title
+
+        return f"{self.title} - {self.duration} weeks"
 
 class Document(models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)  # Foreign key relationship with Employee model
     title = models.CharField(max_length=100)  # Title field for document
     description = models.TextField()  # Description field for document
-    file = models.FileField(upload_to='documents/')  # File field for document (uploaded to 'documents/' directory)
+    file = models.FileField(upload_to='documents/', blank=True)  # File field for document (uploaded to 'documents/' directory)
     date_uploaded = models.DateField()  # Date uploaded field for document
-    employees = models.ManyToManyField(Employee)  # Many-to-many relationship with Employee model for employees associated with the document
 
     def __str__(self):
         return self.title

@@ -44,32 +44,71 @@ def index(request):
     return render(request, "index.html")
 
 @api_view(['GET'])
-def get_companies(request):
+def companies(request):
     if request.method == 'GET':
         companies = Company.objects.all()
         serializer = CompanySerializer(companies, many=True)
         return Response(serializer.data)
 
-@api_view(['GET'])
-def get_educations(request):
+@api_view(['GET', 'POST'])
+def educations(request):
     if request.method == 'GET':
         educations = Education.objects.all()
         serializer = EducationSerializer(educations, many=True)
         return Response(serializer.data)
 
-@api_view(['GET'])
-def get_roles(request):
+    elif request.method == 'POST':
+        serializer = EducationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT', 'DELETE'])
+def education_detail(request, id):
+    try:
+        education = Education.objects.get(id=id)
+    except Education.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = EducationSerializer(education, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        education.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET', 'POST'])
+def roles(request):
     if request.method == 'GET':
         roles = Role.objects.all()
         serializer = RoleSerializer(roles, many=True)
         return Response(serializer.data)
 
-@api_view(['GET'])
-def get_departments(request):
+    elif request.method == 'POST':
+        serializer = RoleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def departs(request):
     if request.method == 'GET':
         departments = Department.objects.all()
         serializer = DepartmentSerializer(departments, many=True)
         return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = DepartmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST'])
 def employees(request):
@@ -103,47 +142,89 @@ def employee_detail(request, slug):
         employee.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def attendances(request):
     if request.method == 'GET':
         attendances = Attendance.objects.all()
         serializer = AttendanceSerializer(attendances, many=True)
         return Response(serializer.data)
 
-@api_view(['GET'])
+    elif request.method == 'POST':
+        serializer = AttendanceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
 def leaves(request):
     if request.method == 'GET':
         leaves = Leave.objects.all()
         serializer = LeaveSerializer(leaves, many=True)
         return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = LeaveSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def performances(request):
     if request.method == 'GET':
         performances = Performance.objects.all()
         serializer = PerformanceSerializer(performances, many=True)
         return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = PerformanceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def payrolls(request):
     if request.method == 'GET':
         payrolls = Payroll.objects.all()
         serializer = PayrollSerializer(payrolls, many=True)
         return Response(serializer.data)
 
-@api_view(['GET'])
+    elif request.method == 'POST':
+        serializer = PayrollSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
 def trainings(request):
     if request.method == 'GET':
         trainings = Training.objects.all()
         serializer = TrainingSerializer(trainings, many=True)
         return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = TrainingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def documents(request):
     if request.method == 'GET':
         documents = Document.objects.all()
         serializer = DocumentSerializer(documents, many=True)
         return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = DocumentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def profiles(request):

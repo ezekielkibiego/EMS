@@ -14,5 +14,17 @@ urlpatterns = [
     path('api/profiles/', views.profiles, name='profile'),
     path('api/profiles/<str:username>/', views.user_profile, name='user_profile'),
     path('api/profiles/<str:username>/update/', views.update_user_profile, name='update_user_profile'),
+    path('api/educations/', views.educations, name='educations'),
+    path('api/educations/<int:id>/', views.education_detail, name='education_detail'),
+    path('api/roles/', views.roles, name='roles'),
+    path('api/departs/', views.departs, name='departs'),
+    path('api/attendances/', views.attendances, name='attendances'),
+    path('api/leaves/', views.leaves, name='leaves'),
+    path('api/performances/', views.performances, name='performances'),
+    path('api/payrolls/', views.payrolls, name='payrolls'),
+    path('api/trainings/', views.trainings, name='trainings'),
+    path('api/documents/', views.documents, name='documents'),
+
+
 
 ]
