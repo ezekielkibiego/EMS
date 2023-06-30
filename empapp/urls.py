@@ -16,6 +16,7 @@ urlpatterns = [
     path('api/profiles/<str:username>/update/', views.update_user_profile, name='update_user_profile'),
     path('api/educations/', views.educations, name='educations'),
     path('api/educations/<int:id>/', views.education_detail, name='education_detail'),
+    path('api/employee_edu/<int:id>/', views.employee_edu, name='employee_edu'),
     path('api/roles/', views.roles, name='roles'),
     path('api/departs/', views.departs, name='departs'),
     path('api/attendances/', views.attendances, name='attendances'),

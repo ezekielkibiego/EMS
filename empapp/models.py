@@ -13,7 +13,8 @@ import uuid
 #     pass
 
 class Company(models.Model):
-    coName = models.CharField(primary_key=True, max_length=50, unique=True)  # Primary key for the company
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    coName = models.CharField(max_length=50)  # Primary key for the company
     coEmail = models.EmailField()  # Email field for the company
     coLogo = CloudinaryField("image", null=True)  # Cloudinary image field for the company logo
     coAddress = models.CharField(max_length=100)  # Address field for the company
@@ -24,6 +25,7 @@ class Company(models.Model):
 
 
 class Role(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50, null=False)  # Name field for role
     level = models.CharField(max_length=50, blank=True)  # Level field for role (optional)
     manager = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)  # Self-referential foreign key for manager
@@ -50,6 +52,7 @@ class Employee(models.Model):
         ('other', 'Other'),
         ('not_specified', 'Prefer Not to Say'),
     ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = CloudinaryField("image", blank=True, null=True)  # Cloudinary image field for employee image (optional)
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)    
     first_name = models.CharField( max_length=50, null=True)  # Primary key for the employee
@@ -95,6 +98,7 @@ class Employee(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 class Department(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)  # Foreign key relationship with Employee model
     name = models.CharField(max_length=50, null=False)  # Name field for department
     location = models.CharField(max_length=180)  # Location field for department
@@ -104,6 +108,7 @@ class Department(models.Model):
         return self.name
 
 class Education(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)  # Foreign key relationship with Employee model
     institution = models.CharField(max_length=100)  # Institution field for education
     degree = models.CharField(max_length=100)  # Degree field for education
@@ -114,6 +119,7 @@ class Education(models.Model):
         return f"{self.degree} from {self.institution}, {self.completion_year}"
 
 class Attendance(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Foreign key relationship with Employee model
     check_in_time = models.DateTimeField()  # Check-in time field for attendance
     check_out_time = models.DateTimeField()  # Check-out time field for attendance
@@ -123,6 +129,7 @@ class Attendance(models.Model):
         return f"{self.employee.first_name} - {self.date}"
 
 class Leave(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Foreign key relationship with Employee model
     start_date = models.DateField()  # Start date field for leave
     end_date = models.DateField()  # End date field for leave
@@ -133,6 +140,7 @@ class Leave(models.Model):
         return f"{self.employee.first_name} - {self.start_date} to {self.end_date}"
 
 class Performance(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Foreign key relationship with Employee model
     year = models.PositiveIntegerField()  # Year field for performance
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)  # Rating field for performance
@@ -142,6 +150,7 @@ class Performance(models.Model):
         return f"{self.employee.first_name} - {self.year}"
 
 class Payroll(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Foreign key relationship with Employee model
     month = models.PositiveIntegerField()  # Month field for payroll
     year = models.PositiveIntegerField()  # Year field for payroll
@@ -153,6 +162,7 @@ class Payroll(models.Model):
         return f"{self.employee.first_name} - {self.month}/{self.year}"
 
 class Training(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100)  # Title field for training
     description = models.TextField()  # Description field for training
     date = models.DateField()  # Date field for training
@@ -165,6 +175,7 @@ class Training(models.Model):
         return f"{self.title} - {self.duration} weeks"
 
 class Document(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True)  # Foreign key relationship with Employee model
     title = models.CharField(max_length=100)  # Title field for document
     description = models.TextField()  # Description field for document
@@ -175,6 +186,7 @@ class Document(models.Model):
         return self.title
 
 class Profile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # One-to-one relationship with User model for profile
     profile_photo = CloudinaryField("image", null=True)  # Cloudinary image field for profile photo (optional)
     about = models.TextField(max_length=300)  # About field for profile

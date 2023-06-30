@@ -81,6 +81,17 @@ def education_detail(request, id):
     elif request.method == 'DELETE':
         education.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@api_view(['GET'])
+def employee_edu(request, id):
+    try:
+        education = Education.objects.get(id=id)
+    except Education.DoesNotExist:
+        return Response({'message': 'Employee Education not found.'}, status=404)
+
+    if request.method == 'GET':
+        serializer = EducationSerializer(education)
+        return Response(serializer.data)
 
 @api_view(['GET', 'POST'])
 def roles(request):
