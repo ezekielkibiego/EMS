@@ -20,7 +20,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 class RegisterView(APIView):
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             return Response({'message': 'User registered successfully.'})
@@ -36,8 +36,10 @@ class LoginView(APIView):
         if user is not None:
             login(request, user)
             return Response({'message': 'User logged in successfully.',
-                             "user": UserSerializer(user).data})
+                             "user": UserRegistrationSerializer(user).data})
         return Response({'message': 'Invalid credentials.'}, status=401)
+    
+
 
 # To retrieve Company details
 def index(request):

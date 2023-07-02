@@ -7,11 +7,18 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.utils.text import slugify
 import uuid
-# from django.contrib.auth.models import AbstractUser
+from django.utils.crypto import get_random_string
 
-# class User(AbstractUser):
-#     pass
+class EmailVerification(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=64, unique=True)
 
+    @classmethod
+    def create_verification(cls, user):
+        token = get_random_string(length=64)
+        verification = cls.objects.create(user=user, token=token)
+        return verification
+    
 class Company(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     coName = models.CharField(max_length=50)  # Primary key for the company
@@ -53,9 +60,9 @@ class Employee(models.Model):
         ('not_specified', 'Prefer Not to Say'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    image = CloudinaryField("image", blank=True, null=True)  # Cloudinary image field for employee image (optional)
+    # image = CloudinaryField("image", blank=True, null=True)  # Cloudinary image field for employee image (optional)
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)    
-    first_name = models.CharField( max_length=50, null=True)  # Primary key for the employee
+    first_name = models.CharField( max_length=50, null=True) 
     middle_name = models.CharField(max_length=50, blank=True)  # Middle name field for employee (optional)
     last_name = models.CharField(max_length=50)  # Last name field for employee
     gender = models.CharField(max_length=15, null=True, choices=GENDER_CHOICES)  # Gender field for employee

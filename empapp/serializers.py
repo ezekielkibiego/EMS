@@ -1,4 +1,4 @@
-from rest_framework import serializers, viewsets, routers
+from rest_framework import serializers
 from .models import *
 
 from django.contrib.auth.models import User
@@ -7,16 +7,29 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
 
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    repeat_password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'email', 'first_name', 'last_name')
+        fields = ['username', 'email', 'first_name', 'last_name', 'password', 'repeat_password']
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        repeat_password = attrs.pop('repeat_password')
+
+        if password != repeat_password:
+            raise serializers.ValidationError("Passwords do not match.")
+
+        return attrs
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
         return user
+
 
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
