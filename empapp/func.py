@@ -16,7 +16,7 @@ class UpdateEmployeeProfile(APIView):
             profile.employee = employee
             profile.save()
             return Response(ProfileSerializer(profile).data, status=200)
-        return Response(serializer.errors, statu=400)
+        return Response(serializer.errors, status=400)
     def put(self, request, username, *args, **kwargs):
         try:
             profile = Profile.objects.get(user__username=username)
