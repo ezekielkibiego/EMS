@@ -270,5 +270,6 @@ def update_user_profile(request, username):
         serializer = UpdateProfileSerializer(profile, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=200)
+            profile = Profile.objects.get(user__username=username)
+            return Response(ProfileSerializer(profile).data, status=200)
         return Response(serializer.errors, status=400)
