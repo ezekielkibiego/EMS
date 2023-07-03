@@ -102,14 +102,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
-    
-    def save(self, **kwargs):
-        employee_data = self.validated_data.pop('employee')
-        profile = super().save(**kwargs)
-        employee_serializer = EmployeeSerializer(instance=profile.employee, data=employee_data)
-        if employee_serializer.is_valid():
-            employee_serializer.save()
-        return profile
 
 
 
