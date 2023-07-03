@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 
 class UpdateEmployeeProfile(APIView):
-    def post(request, username, *args, **kwargs):
+    def post(self, request, username, *args, **kwargs):
         try:
             profile = Profile.objects.get(user__username=username)
         except Profile.DoesNotExist:
@@ -17,7 +17,7 @@ class UpdateEmployeeProfile(APIView):
             profile.save()
             return Response(ProfileSerializer(profile).data, status=200)
         return Response(serializer.errors, statu=400)
-    def put(request, username, *args, **kwargs):
+    def put(self, request, username, *args, **kwargs):
         try:
             profile = Profile.objects.get(user__username=username)
         except Profile.DoesNotExist:
