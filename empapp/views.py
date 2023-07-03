@@ -16,6 +16,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from django.http import JsonResponse
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class RegisterView(APIView):
@@ -259,6 +260,7 @@ def user_profile(request, username):
 
 @api_view(['PUT'])
 def update_user_profile(request, username):
+    parser_classes = [MultiPartParser, FormParser]
     try:
         profile = Profile.objects.get(user__username=username)
     except Profile.DoesNotExist:
