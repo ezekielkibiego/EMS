@@ -28,6 +28,4 @@ urlpatterns = [
     path('api/trainings/', views.trainings, name='trainings'),
     path('api/documents/', views.documents, name='documents'),
 
-
-
 ]
