@@ -267,7 +267,7 @@ def update_user_profile(request, username):
         return Response({'message': 'User profile not found.'}, status=404)
 
     if request.method == 'PUT':
-        serializer = ProfileSerializer(profile, data=request.data)
+        serializer = UpdateProfileSerializer(profile, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=200)
