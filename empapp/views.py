@@ -108,6 +108,24 @@ def roles(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT', 'DELETE'])
+def roles_detail(request, id):
+    try:
+        role = Role.objects.get(id=id)
+    except Role.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = RoleSerializer(role, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        role.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 def departs(request):
@@ -122,6 +140,24 @@ def departs(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT', 'DELETE'])
+def depart_detail(request, id):
+    try:
+        depart = Department.objects.get(id=id)
+    except Department.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = DepartmentSerializer(depart, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        depart.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 def employees(request):
@@ -169,6 +205,24 @@ def attendances(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT', 'DELETE'])
+def attendance_detail(request, id):
+    try:
+        attendance = Attendance.objects.get(id=id)
+    except Attendance.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = AttendanceSerializer(attendance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        attendance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 @api_view(['GET', 'POST'])
 def leaves(request):
     if request.method == 'GET':
@@ -183,6 +237,24 @@ def leaves(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT', 'DELETE'])
+def leave_detail(request, id):
+    try:
+        leave = Leave.objects.get(id=id)
+    except Education.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = LeaveSerializer(leave, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        leave.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 @api_view(['GET', 'POST'])
 def performances(request):
     if request.method == 'GET':
@@ -196,6 +268,24 @@ def performances(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT', 'DELETE'])
+def perfomance_detail(request, id):
+    try:
+        perform = Performance.objects.get(id=id)
+    except Education.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = PerformanceSerializer(perform, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        perform.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 def payrolls(request):
@@ -210,6 +300,24 @@ def payrolls(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT', 'DELETE'])
+def pay_detail(request, id):
+    try:
+        pay = Payroll.objects.get(id=id)
+    except Payroll.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = PayrollSerializer(pay, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        pay.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 def trainings(request):
@@ -224,6 +332,24 @@ def trainings(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT', 'DELETE'])
+def training_detail(request, id):
+    try:
+        train = Training.objects.get(id=id)
+    except Training.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = TrainingSerializer(train, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        train.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 def documents(request):
@@ -238,6 +364,24 @@ def documents(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PUT', 'DELETE'])
+def docs_detail(request, id):
+    try:
+        docs = Document.objects.get(id=id)
+    except Document.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = DocumentSerializer(docs, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        docs.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 def profiles(request):
@@ -257,7 +401,7 @@ def user_profile(request, username):
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
 
-@api_view(['PUT'])
+@api_view(['PUT, DELETE'])
 def update_user_profile(request, username):
     try:
         profile = Profile.objects.get(user__username=username)
@@ -268,5 +412,11 @@ def update_user_profile(request, username):
         serializer = ProfileSerializer(profile, data=request.data)
         if serializer.is_valid():
             serializer.save()
+
+            
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
+    
+    elif request.method == 'DELETE':
+        profile.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
