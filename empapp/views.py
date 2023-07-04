@@ -16,6 +16,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from django.http import JsonResponse
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class RegisterView(APIView):
@@ -403,18 +404,18 @@ def user_profile(request, username):
 
 @api_view(['PUT, DELETE'])
 def update_user_profile(request, username):
+    parser_classes = [MultiPartParser, FormParser]
     try:
         profile = Profile.objects.get(user__username=username)
     except Profile.DoesNotExist:
         return Response({'message': 'User profile not found.'}, status=404)
 
     if request.method == 'PUT':
-        serializer = ProfileSerializer(profile, data=request.data)
+        serializer = UpdateProfileSerializer(profile, data=request.data)
         if serializer.is_valid():
             serializer.save()
-
-            
-            return Response(serializer.data)
+            profile = Profile.objects.get(user__username=username)
+            return Response(ProfileSerializer(profile).data, status=200)
         return Response(serializer.errors, status=400)
     
     elif request.method == 'DELETE':
