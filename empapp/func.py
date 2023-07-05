@@ -38,4 +38,5 @@ class ChangePassword(APIView):
                 user.set_password(request.data['new_password'])
                 user.save()
                 return Response({'Msg': 'Success'}, status=200)
+            return Response({'Msg': 'Wrong Credentials'}, status=404)
         return Response(serializer.errors, status=400)
