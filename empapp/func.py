@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
-from .serializers import EmployeeSerializer, ProfileSerializer, ChangePasswordSerializer
-from .models import Profile
+from .serializers import EmployeeSerializer, ProfileSerializer, ChangePasswordSerializer, UpdateEmployeeRoleManagerSerializer
+from .models import Profile, Employee
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 
@@ -40,3 +40,16 @@ class ChangePassword(APIView):
                 return Response({'Msg': 'Success'}, status=200)
             return Response({'Msg': 'Wrong Credentials'}, status=404)
         return Response(serializer.errors, status=400)
+
+class ChangeEmployeeRoleManager(APIView):
+    def put(self, request, id, *args, **kwargs):
+        try:
+            employee = Employee.objects.filter(id = id).first()
+        except:
+            return Response({'message': 'Employee not found'}, status=404)
+        serializer = UpdateEmployeeRoleManagerSerializer(employee, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'Msg: Success'}, status=200)
+        return Response(serializer.errors, status=400)
+        

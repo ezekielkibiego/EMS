@@ -42,7 +42,6 @@ class EducationSerializer(serializers.ModelSerializer):
         model = Education
         fields = '__all__'
 
-
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
@@ -118,6 +117,11 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+class UpdateEmployeeRoleManagerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = ['role', 'manager']
 
 
 

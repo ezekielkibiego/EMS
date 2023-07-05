@@ -3,7 +3,7 @@ from django.urls import path, include
 from empapp import views
 # from rest_framework_simplejwt.views import TokenRefreshView
 from empapp.views import RegisterView, LoginView
-from .func import UpdateEmployeeProfile, ChangePassword
+from .func import UpdateEmployeeProfile, ChangePassword, ChangeEmployeeRoleManager
 
 
 urlpatterns = [
@@ -34,6 +34,7 @@ urlpatterns = [
     path('api/trainings/', views.trainings, name='trainings'),
     path('api/trainings/<int:id>/', views.training_detail, name='training_detail'),
     path('api/documents/', views.documents, name='documents'),
-    path('api/change_password/<str:username>/', ChangePassword.as_view(), name='change_password')
+    path('api/change_password/<str:username>/', ChangePassword.as_view(), name='change_password'),
+    path('api/change_role_manager/<uuid:id>/', ChangeEmployeeRoleManager.as_view(), name='change_role_manager')
 
 ]
