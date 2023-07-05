@@ -115,5 +115,9 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['profile_photo', 'about', 'birthdate', 'emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_email', 'emergency_contact_relationship', 'interests', 'nationality']
 
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
 
 
