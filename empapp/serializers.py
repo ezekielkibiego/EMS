@@ -56,7 +56,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class ManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = '__all__'
+        fields = ['id', 'first_name', 'middle_name', 'last_name', 'gender', 'phone', 'email', 'role', 'manager', 'marital_status', 'address']
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
