@@ -60,8 +60,7 @@ class Employee(models.Model):
         ('not_specified', 'Prefer Not to Say'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # image = CloudinaryField("image", blank=True, null=True)  # Cloudinary image field for employee image (optional)
-    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)    
+    # image = CloudinaryField("image", blank=True, null=True)  # Cloudinary image field for employee image (optional)    
     first_name = models.CharField( max_length=50, null=True) 
     middle_name = models.CharField(max_length=50, blank=True)  # Middle name field for employee (optional)
     last_name = models.CharField(max_length=50)  # Last name field for employee
