@@ -35,9 +35,17 @@ class LoginView(APIView):
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
+            #get the user role
+            profile = Profile.objects.filter(user = user).first()
+            role = 'Normal'
+            if profile and profile.employee and profile.employee.role:
+                role = profile.employee.role.name
             login(request, user)
-            return Response({'message': 'User logged in successfully.',
-                             "user": UserRegistrationSerializer(user).data})
+            return Response({
+                'message': 'User logged in successfully.',
+                "user": UserRegistrationSerializer(user).data,
+                "role": role
+                })
         return Response({'message': 'Invalid credentials.'}, status=401)
     
 
