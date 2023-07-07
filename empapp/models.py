@@ -77,14 +77,6 @@ class Employee(models.Model):
     def save_employee(self):
         self.save()
 
-    def save(self, *args, **kwargs):
-        # Generate a slug from the employee's full name when saving the model
-        if not self.slug:
-            full_name = f"{self.first_name} {self.last_name}"
-            self.slug = slugify(full_name)
-
-        super().save(*args, **kwargs)
-
     def create_employee(self):
         self.save()
 
