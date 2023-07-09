@@ -13,15 +13,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password']
 
-    def validate(self, attrs):
-        password = attrs.get('password')
-        repeat_password = attrs.pop('repeat_password')
-
-        if password != repeat_password:
-            raise serializers.ValidationError("Passwords do not match.")
-
-        return attrs
-
     def create(self, validated_data):
         password = validated_data.pop('password')
         user = User(**validated_data)
