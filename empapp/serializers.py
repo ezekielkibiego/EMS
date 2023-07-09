@@ -56,6 +56,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = ['id', 'first_name', 'middle_name', 'last_name', 'gender', 'phone', 'email', 'role', 'manager', 'marital_status', 'address', 'start_date', 'end_date']
 
+class UpdateEmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = ['id', 'first_name', 'middle_name', 'last_name', 'gender', 'phone', 'email', 'marital_status', 'address']
+
 
 class AttendanceSerializer(serializers.ModelSerializer):
     class Meta:

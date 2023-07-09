@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from .serializers import EmployeeSerializer, ProfileSerializer, ChangePasswordSerializer, UpdateEmployeeRoleManagerSerializer
+from .serializers import EmployeeSerializer, ProfileSerializer, ChangePasswordSerializer, UpdateEmployeeRoleManagerSerializer, UpdateEmployeeSerializer
 from .models import Profile, Employee
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
@@ -11,7 +11,7 @@ class UpdateEmployeeProfile(APIView):
             profile = Profile.objects.get(user__username=username)
         except Profile.DoesNotExist:
             return Response({'message': 'User profile not found.'}, status=404)
-        serializer = EmployeeSerializer(data=request.data)
+        serializer = UpdateEmployeeSerializer(data=request.data)
         if serializer.is_valid():
             employee = serializer.save()
             profile.employee = employee
@@ -23,7 +23,7 @@ class UpdateEmployeeProfile(APIView):
             profile = Profile.objects.get(user__username=username)
         except Profile.DoesNotExist:
             return Response({'message': 'User profile not found.'}, status=404)
-        serializer = EmployeeSerializer(profile.employee, data = request.data)
+        serializer = UpdateEmployeeSerializer(profile.employee, data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(ProfileSerializer(profile).data, status=200)
