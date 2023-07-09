@@ -8,11 +8,10 @@ from django.contrib.auth.password_validation import validate_password
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    repeat_password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'password', 'repeat_password']
+        fields = ['username', 'email', 'first_name', 'last_name', 'password']
 
     def validate(self, attrs):
         password = attrs.get('password')
