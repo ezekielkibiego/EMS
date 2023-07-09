@@ -54,7 +54,7 @@ class ChangeEmployeeRoleManager(APIView):
         return Response(serializer.errors, status=400)
 
 class UpdateUserProfile(APIView):
-    def put(request, username, *args, **kwargs):
+    def put(self, request, username, *args, **kwargs):
         try:
             profile = Profile.objects.get(user__username=username)
         except Profile.DoesNotExist:
@@ -67,7 +67,7 @@ class UpdateUserProfile(APIView):
             return Response(ProfileSerializer(profile).data, status=200)
         return Response(serializer.errors, status=400)
     
-    def delete(request, username, *args, **kwargs):
+    def delete(self, request, username, *args, **kwargs):
         try:
             profile = Profile.objects.get(user__username=username)
         except Profile.DoesNotExist:
