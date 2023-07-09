@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from .serializers import EmployeeSerializer, ProfileSerializer, ChangePasswordSerializer, UpdateEmployeeRoleManagerSerializer, UpdateEmployeeSerializer
+from .serializers import EmployeeSerializer, ProfileSerializer, ChangePasswordSerializer, UpdateEmployeeRoleManagerSerializer, UpdateEmployeeSerializer, UpdateProfileSerializer
 from .models import Profile, Employee
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
@@ -52,4 +52,27 @@ class ChangeEmployeeRoleManager(APIView):
             serializer.save()
             return Response({'Msg: Success'}, status=200)
         return Response(serializer.errors, status=400)
+
+class UpdateUserProfile(APIView):
+    def put(request, username, *args, **kwargs):
+        try:
+            profile = Profile.objects.get(user__username=username)
+        except Profile.DoesNotExist:
+            return Response({'message': 'User profile not found.'}, status=404)
+        
+        serializer = UpdateProfileSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            profile = Profile.objects.get(user__username=username)
+            return Response(ProfileSerializer(profile).data, status=200)
+        return Response(serializer.errors, status=400)
+    
+    def delete(request, username, *args, **kwargs):
+        try:
+            profile = Profile.objects.get(user__username=username)
+        except Profile.DoesNotExist:
+            return Response({'message': 'User profile not found.'}, status=404)
+        
+        profile.delete()
+        return Response(status=204)
         
