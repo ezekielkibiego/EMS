@@ -41,8 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary',
-    'bootstrap4',
     'empapp',
     'rest_framework',
     'corsheaders',
@@ -82,32 +80,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'emp.wsgi.application'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('DB_NAME'),
-#         'USER': config('DB_USER'),
-#         'PASSWORD': config('DB_PASS'),
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
-    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
-
+     'default': {
+         'ENGINE': 'django.db.backends.postgresql',
+         'NAME': config('DB_NAME'),
+         'USER': config('DB_USER'),
+         'PASSWORD': config('DB_PASS'),
+         'HOST': 'localhost',
+         'PORT': '5432',
+     }
 }
-
-cloudinary.config(
-    cloud_name = config('CD_NAME'),
-    api_key= config('CD_API'),
-    api_secret=config('CD_SECRET'),
-    secure = config('CD_SECURE')
-)
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
